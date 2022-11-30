@@ -1,0 +1,91 @@
+name: Pull Request
+
+on:
+    pull_request:
+    # run CI/CD against main as well, to generate cache
+    push:
+        branches:
+            - main
+
+jobs:
+    test:
+        strategy:
+            matrix:
+                version: ['stable', 'nightly']
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions-rs/toolchain@master
+              with:
+                  toolchain: ${{ matrix.version }}
+            - uses: Swatinem/rust-cache@v2
+            - uses: baptiste0928/cargo-install@v1
+              with:
+                  crate: cargo-make
+            - name: Test
+              run: cargo make test
+            - name: Build
+              run: cargo build --release
+    test-other-versions:
+        strategy:
+            matrix:
+                version: ['1.56.0']
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions-rs/toolchain@master
+              with:
+                  toolchain: ${{ matrix.version }}
+            - uses: Swatinem/rust-cache@v2
+            - uses: baptiste0928/cargo-install@v1
+              with:
+                  crate: cargo-make
+            - name: Test
+              env:
+                  RUSTFLAGS: '--cap-lints warn'
+              run: cargo test --lib
+            - name: Build
+              env:
+                  RUSTFLAGS: '--cap-lints warn'
+              run: cargo build --release
+    coverage:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v3
+            - uses: dtolnay/rust-toolchain@master
+              with:
+                  toolchain: nightly-2022-11-21
+            - uses: Swatinem/rust-cache@v2
+            - name: Run cargo-tarpaulin
+              uses: actions-rs/tarpaulin@v0.1
+              with:
+                  timeout: 10
+                  out-type: Lcov
+                  args: '--all-features --ignore-tests --line --output-dir coverage'
+            - name: Post to Coveralls
+              uses: coverallsapp/github-action@master
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  path-to-lcov: "coverage/lcov.info"
+    lint_format:
+        runs-on: [ubuntu-latest]
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@v2
+            - uses: dtolnay/rust-toolchain@master
+              with:
+                toolchain: nightly-2022-11-21
+                components: rustfmt
+            - uses: Swatinem/rust-cache@v2
+            - uses: baptiste0928/cargo-install@v1
+              with:
+                  crate: cargo-make
+            - name: Lint
+              run: cargo make lint
+            - name: Docs
+              run: cargo make docs
+            - name: Format
+              run: cargo make format

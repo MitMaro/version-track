@@ -1,0 +1,25 @@
+[package]
+name = "version-track"
+version = "0.1.0"
+authors = ["Tim Oram <dev@mitmaro.ca>"]
+description = "Library used to track changes to complex data, when direct comparision or hashing is too expensive."
+repository = "https://github.com/MitMaro/version-track"
+documentation = "https://docs.rs/version-track/"
+keywords = [ "version", "cache", "tracking" ]
+categories = ["caching"]
+readme = "README.md"
+license = "ISC"
+include = [
+	"**/*.rs",
+	"/Cargo.toml",
+	"/CHANGELOG.md",
+	"/LICENSE",
+	"/README.md"
+]
+edition = "2021"
+
+[lib]
+name = "version_track"
+
+[dependencies]
+uuid = { version = "1.2.2", features = ["v4", "fast-rng"] }
