@@ -1,4 +1,4 @@
-[![Crates.io](https://img.shields.io/crates/v/version_track.svg)](https://crates.io/crates/captur)
+[![Crates.io](https://img.shields.io/crates/v/version_track.svg)](https://crates.io/crates/version_track)
 [![docs](https://docs.rs/version_track/badge.svg)](https://docs.rs/version-track/)
 [![GitHub license](https://img.shields.io/github/license/MitMaro/version-track)](https://raw.githubusercontent.com/MitMaro/version-track/master/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/MitMaro/version-track/badge.svg?branch=main)](https://coveralls.io/github/MitMaro/version-track?branch=main)

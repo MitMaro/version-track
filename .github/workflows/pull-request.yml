@@ -57,14 +57,14 @@ jobs:
             - uses: actions/checkout@v3
             - uses: dtolnay/rust-toolchain@master
               with:
-                  toolchain: nightly-2022-11-21
+                  toolchain: nightly
             - uses: Swatinem/rust-cache@v2
-            - name: Run cargo-tarpaulin
-              uses: actions-rs/tarpaulin@v0.1
+            - uses: baptiste0928/cargo-install@v2
               with:
-                  timeout: 10
-                  out-type: Lcov
-                  args: '--all-features --ignore-tests --line --output-dir coverage'
+                  crate: cargo-tarpaulin
+            - name: Run cargo-tarpaulin
+              run: |
+                  cargo +nightly tarpaulin --all-features --ignore-tests --line --output-dir coverage --timeout 10 --out Lcov
             - name: Post to Coveralls
               uses: coverallsapp/github-action@master
               with:
@@ -74,10 +74,10 @@ jobs:
         runs-on: [ubuntu-latest]
         timeout-minutes: 15
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - uses: dtolnay/rust-toolchain@master
               with:
-                toolchain: nightly-2022-11-21
+                toolchain: nightly
                 components: rustfmt
             - uses: Swatinem/rust-cache@v2
             - uses: baptiste0928/cargo-install@v1
