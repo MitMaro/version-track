@@ -43,7 +43,7 @@ where T: Default
 impl<T> Clone for Versioned<T>
 where T: Clone
 {
-	/// Proxy clone call, that creates a new tracked version of `T` by cloning `T`. THe version is not cloned, and a
+	/// Proxy clone call, that creates a new tracked version of `T` by cloning `T`. The version is not cloned, and a
 	/// new version is created.
 	#[inline]
 	fn clone(&self) -> Self {
@@ -58,6 +58,7 @@ impl<T> Deref for Versioned<T> {
 
 	/// Dereferences the value. Does not increment version.
 	#[must_use]
+	#[inline]
 	fn deref(&self) -> &Self::Target {
 		&self.value
 	}
@@ -66,14 +67,16 @@ impl<T> Deref for Versioned<T> {
 impl<T> AsRef<T> for Versioned<T> {
 	/// Returns reference to the value. Does not increment version.
 	#[must_use]
+	#[inline]
 	fn as_ref(&self) -> &T {
-		self.deref()
+		self
 	}
 }
 
 impl<T> DerefMut for Versioned<T> {
 	/// Mutably dereferences the value. Increments version.
 	#[must_use]
+	#[inline]
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		self.version.increment();
 		&mut self.value
@@ -83,8 +86,9 @@ impl<T> DerefMut for Versioned<T> {
 impl<T> AsMut<T> for Versioned<T> {
 	/// Returns mutable reference to the value. Increments version.
 	#[must_use]
+	#[inline]
 	fn as_mut(&mut self) -> &mut T {
-		self.deref_mut()
+		self
 	}
 }
 
@@ -143,7 +147,7 @@ mod tests {
 	fn deref() {
 		let versioned_value = Versioned::new(TestType::default());
 		let initial_version = versioned_value.version();
-		assert_eq!(versioned_value.deref(), &TestType::default());
+		assert_eq!(&*versioned_value, &TestType::default());
 		assert_eq!(initial_version, versioned_value.version());
 	}
 
@@ -159,7 +163,7 @@ mod tests {
 	fn deref_mut() {
 		let mut versioned_value = Versioned::new(TestType::default());
 		let initial_version = versioned_value.version();
-		let mut value = versioned_value.deref_mut();
+		let value = &mut *versioned_value;
 		value.value = 99;
 		assert_eq!(*versioned_value, TestType { value: 99 });
 		assert_ne!(initial_version, versioned_value.version());
@@ -169,7 +173,7 @@ mod tests {
 	fn as_mut() {
 		let mut versioned_value = Versioned::new(TestType::default());
 		let initial_version = versioned_value.version();
-		let mut value = versioned_value.as_mut();
+		let value = versioned_value.as_mut();
 		value.value = 99;
 		assert_eq!(*versioned_value, TestType { value: 99 });
 		assert_ne!(initial_version, versioned_value.version());
