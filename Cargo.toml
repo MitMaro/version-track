@@ -22,4 +22,4 @@ edition = "2021"
 name = "version_track"
 
 [dependencies]
-uuid = { version = "1.4.1", features = ["v4", "fast-rng"] }
+uuid = { version = "1.5.0", features = ["v4", "fast-rng"] }
