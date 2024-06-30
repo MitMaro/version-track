@@ -2,7 +2,7 @@
 name = "version-track"
 version = "0.1.0"
 authors = ["Tim Oram <dev@mitmaro.ca>"]
-description = "Library used to track changes to complex data, when direct comparision or hashing is too expensive."
+description = "Library used to track changes to complex data, when direct comparison or hashing is too expensive."
 repository = "https://github.com/MitMaro/version-track"
 documentation = "https://docs.rs/version-track/"
 keywords = [ "version", "cache", "tracking" ]
