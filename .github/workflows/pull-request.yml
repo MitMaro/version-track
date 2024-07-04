@@ -11,81 +11,82 @@ jobs:
     test:
         strategy:
             matrix:
-                version: ['stable', 'nightly']
-        runs-on: [ubuntu-latest]
+                version: [ '1.56.0', 'stable', 'nightly' ]
+        runs-on: [ ubuntu-latest ]
         timeout-minutes: 15
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions-rs/toolchain@master
-              with:
-                  toolchain: ${{ matrix.version }}
-            - uses: Swatinem/rust-cache@v2
-            - uses: baptiste0928/cargo-install@v1
-              with:
-                  crate: cargo-make
-            - name: Test
-              run: cargo make test
-            - name: Build
-              run: cargo build --release
-    test-other-versions:
-        strategy:
-            matrix:
-                version: ['1.56.0']
-        runs-on: [ubuntu-latest]
-        timeout-minutes: 15
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions-rs/toolchain@master
-              with:
-                  toolchain: ${{ matrix.version }}
-            - uses: Swatinem/rust-cache@v2
-            - uses: baptiste0928/cargo-install@v1
-              with:
-                  crate: cargo-make
-            - name: Test
-              env:
-                  RUSTFLAGS: '--cap-lints warn'
-              run: cargo test --lib
-            - name: Build
-              env:
-                  RUSTFLAGS: '--cap-lints warn'
-              run: cargo build --release
+            -   uses: actions/checkout@v3
+            -   uses: Swatinem/rust-cache@v2
+            -   name: Install Rust
+                uses: actions-rs/toolchain@v1
+                with:
+                    toolchain: ${{ matrix.version }}
+                    profile: minimal
+                    override: true
+            -   uses: baptiste0928/cargo-install@v2
+                with:
+                    crate: cargo-make
+            -   name: Test
+                run: cargo make test
+            -   name: Build
+                run: cargo build --release
     coverage:
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@master
-              with:
-                  toolchain: nightly
-            - uses: Swatinem/rust-cache@v2
-            - uses: baptiste0928/cargo-install@v2
-              with:
-                  crate: cargo-tarpaulin
-            - name: Run cargo-tarpaulin
-              run: |
-                  cargo +nightly tarpaulin --all-features --ignore-tests --line --output-dir coverage --timeout 10 --out Lcov
-            - name: Post to Coveralls
-              uses: coverallsapp/github-action@master
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  path-to-lcov: "coverage/lcov.info"
-    lint_format:
-        runs-on: [ubuntu-latest]
-        timeout-minutes: 15
+            -   uses: actions/checkout@v3
+            -   uses: Swatinem/rust-cache@v2
+            -   uses: dtolnay/rust-toolchain@master
+                with:
+                    toolchain: nightly
+            -   uses: baptiste0928/cargo-install@v2
+                with:
+                    crate: cargo-tarpaulin
+            -   name: Run cargo-tarpaulin
+                run: |
+                    cargo +nightly tarpaulin --all-features --ignore-tests --line --output-dir coverage --timeout 10 --out Lcov
+            -   name: Post to Coveralls
+                uses: coverallsapp/github-action@master
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    path-to-lcov: "coverage/lcov.info"
+    lint:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
         steps:
-            - uses: actions/checkout@v3
-            - uses: dtolnay/rust-toolchain@master
-              with:
-                toolchain: nightly
-                components: rustfmt
-            - uses: Swatinem/rust-cache@v2
-            - uses: baptiste0928/cargo-install@v1
-              with:
-                  crate: cargo-make
-            - name: Lint
-              run: cargo make lint
-            - name: Docs
-              run: cargo make docs
-            - name: Format
-              run: cargo make format
+            -   uses: actions/checkout@v3
+            -   uses: Swatinem/rust-cache@v2
+            -   uses: dtolnay/rust-toolchain@stable
+                with:
+                    components: clippy
+            -   uses: baptiste0928/cargo-install@v2
+                with:
+                    crate: cargo-make
+            -   run: cargo make lint
+    docs:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            -   uses: actions/checkout@v3
+            -   uses: Swatinem/rust-cache@v2
+            -   uses: dtolnay/rust-toolchain@master
+                with:
+                    toolchain: nightly
+            -   uses: baptiste0928/cargo-install@v2
+                with:
+                    crate: cargo-make
+            -   run: cargo make docs
+    format:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            -   uses: actions/checkout@v3
+            -   uses: Swatinem/rust-cache@v2
+            -   uses: dtolnay/rust-toolchain@master
+                with:
+                    toolchain: nightly
+                    components: rustfmt
+            -   uses: baptiste0928/cargo-install@v2
+                with:
+                    crate: cargo-make
+            -   run: cargo make format
