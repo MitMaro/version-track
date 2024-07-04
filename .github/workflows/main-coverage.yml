@@ -1,0 +1,27 @@
+name: Master Coverage
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    coverage:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            -   uses: actions/checkout@v3
+            -   uses: dtolnay/rust-toolchain@nightly
+                with:
+                    toolchain: nightly
+            -   uses: Swatinem/rust-cache@v2
+            -   uses: baptiste0928/cargo-install@v2
+                with:
+                    crate: cargo-tarpaulin
+            -   name: Run cargo-tarpaulin
+                run: cargo +nightly tarpaulin  --all-features --ignore-tests --line --output-dir coverage --timeout 10 --out Lcov
+            -   name: Post to Coveralls
+                uses: coverallsapp/github-action@v2
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    path-to-lcov: "coverage/lcov.info"
