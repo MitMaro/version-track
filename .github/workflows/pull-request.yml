@@ -11,7 +11,7 @@ jobs:
     test:
         strategy:
             matrix:
-                version: [ '1.57.0', 'stable', 'nightly' ]
+                version: [ '1.60.0', 'stable', 'nightly' ]
         runs-on: [ ubuntu-latest ]
         timeout-minutes: 15
         steps:

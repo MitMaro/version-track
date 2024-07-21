@@ -68,6 +68,12 @@ assert_ne!(current_version, version);
 assert_eq!(value, "foobar");
 ```
 
+# Supported Rust Versions
+
+This project will support Rust versions since 1.60.0.
+
+Dropping support for a Rust version will result in a major version bump, following [Semantic Versioning](https://semver.org/).
+
 ## License
 
 Version Track is released under the ISC license. See [LICENSE](LICENSE).

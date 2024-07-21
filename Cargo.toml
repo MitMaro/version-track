@@ -20,6 +20,7 @@ edition = "2021"
 
 [lib]
 name = "version_track"
+rust-version = "1.60.0"
 
 [dependencies]
 uuid = { version = "1.4.1", features = ["v4", "fast-rng"] }
