@@ -23,7 +23,7 @@ name = "version_track"
 rust-version = "1.60.0"
 
 [dependencies]
-uuid = { version = "1.4.1", features = ["v4", "fast-rng"] }
+uuid = { version = "1.10.0", features = ["v4", "fast-rng"] }
 
 [lints.rust]
 future_incompatible = { level = "warn", priority = -2 }
