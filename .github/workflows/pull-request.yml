@@ -11,7 +11,7 @@ jobs:
     test:
         strategy:
             matrix:
-                version: [ '1.56.0', 'stable', 'nightly' ]
+                version: [ '1.57.0', 'stable', 'nightly' ]
         runs-on: [ ubuntu-latest ]
         timeout-minutes: 15
         steps:
@@ -23,11 +23,8 @@ jobs:
                     toolchain: ${{ matrix.version }}
                     profile: minimal
                     override: true
-            -   uses: baptiste0928/cargo-install@v2
-                with:
-                    crate: cargo-make
             -   name: Test
-                run: cargo make test
+                run: cargo test
             -   name: Build
                 run: cargo build --release
     coverage:
@@ -59,10 +56,7 @@ jobs:
             -   uses: dtolnay/rust-toolchain@stable
                 with:
                     components: clippy
-            -   uses: baptiste0928/cargo-install@v2
-                with:
-                    crate: cargo-make
-            -   run: cargo make lint
+            -   run: cargo clippy --all-targets --all-features
     docs:
         runs-on: ubuntu-latest
         timeout-minutes: 10
@@ -72,10 +66,7 @@ jobs:
             -   uses: dtolnay/rust-toolchain@master
                 with:
                     toolchain: nightly
-            -   uses: baptiste0928/cargo-install@v2
-                with:
-                    crate: cargo-make
-            -   run: cargo make docs
+            -   run: cargo doc --all-features
     format:
         runs-on: ubuntu-latest
         timeout-minutes: 10
@@ -86,7 +77,4 @@ jobs:
                 with:
                     toolchain: nightly
                     components: rustfmt
-            -   uses: baptiste0928/cargo-install@v2
-                with:
-                    crate: cargo-make
-            -   run: cargo make format
+            -   run: cargo fmt --all -- --check
