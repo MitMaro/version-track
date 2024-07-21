@@ -1,5 +1,5 @@
-[![Crates.io](https://img.shields.io/crates/v/version_track.svg)](https://crates.io/crates/version_track)
-[![docs](https://docs.rs/version_track/badge.svg)](https://docs.rs/version-track/)
+[![Crates.io](https://img.shields.io/crates/v/version-track.svg)](https://crates.io/crates/version-track)
+[![docs](https://img.shields.io/docsrs/version-track/latest)](https://docs.rs/version-track/)
 [![GitHub license](https://img.shields.io/github/license/MitMaro/version-track)](https://raw.githubusercontent.com/MitMaro/version-track/master/LICENSE)
 [![Coverage Status](https://coveralls.io/repos/github/MitMaro/version-track/badge.svg?branch=main)](https://coveralls.io/github/MitMaro/version-track?branch=main)
 ![Minimum rustc version](https://img.shields.io/badge/rustc-1.56.0+-green.svg)
